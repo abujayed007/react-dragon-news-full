@@ -1,34 +1,44 @@
-import { Link, useLoaderData, useLocation, useNavigate } from "react-router-dom";
-import Navbar from "../Shared/Navbar/Navbar";
-import { useContext } from "react";
-import { AuthContext } from "../../Provider/AuthProvider/AuthProvider";
+import { Link } from 'react-router-dom';
+import Navbar from '../Shared/Navbar/Navbar';
+import { useContext } from 'react';
+import { AuthContext } from '../../Provider/AuthProvider/AuthProvider';
 
 
-const Login = () => {
-    const {userLogin} = useContext(AuthContext)
-   const location = useLocation()
-    const navigate = useNavigate()
-    const handleLogin = e => {
+const Register = () => {
+    const {createUser} = useContext(AuthContext)
+
+    const handleRegister = e =>{
         e.preventDefault()
-        console.log(e.currentTarget);
         const form = new FormData(e.currentTarget)
+        const name = form.get('name')
+        const photo = form.get('photo')
         const email = form.get('email')
-        const password = form.get('password')
-        
-        userLogin(email, password)
-        .then(result =>{
-            const user = result.user
-            // console.log(user);
-            navigate(location?.state ? location.state : '/')
+        const password =form.get('password')
+        // console.log(name, email, password, photo);
+        createUser(email, password)
+        .then(res => {
+            const user = res.user
+            console.log(user);
         }).catch(console.error())
-
     }
     return (
         <div>
-            <Navbar/>
+            <Navbar></Navbar>
             <div className="card shrink-0 lg:w-1/2 md:w-3/4 mx-auto  shadow-2xl bg-base-100">
-                <h2 className="text-3xl my-10 text-center">Login</h2>
-                <form onSubmit={handleLogin} className="card-body">
+                <h2 className="text-3xl my-10 text-center">Register</h2>
+                <form onSubmit={handleRegister} className="card-body">
+                    <div className="form-control">
+                        <label className="label">
+                            <span className="label-text">Name</span>
+                        </label>
+                        <input type="text" placeholder="Name" name='name' className="input input-bordered" required />
+                    </div>
+                    <div className="form-control">
+                        <label className="label">
+                            <span className="label-text">Photo URL</span>
+                        </label>
+                        <input type="text" placeholder="Photo URL" name='photo' className="input input-bordered" required />
+                    </div>
                     <div className="form-control">
                         <label className="label">
                             <span className="label-text">Email</span>
@@ -54,4 +64,4 @@ const Login = () => {
     );
 };
 
-export default Login;
+export default Register;
